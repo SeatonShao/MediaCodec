@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper  namespace="com.infotop.constants.ConstantsMapper" >
+    <select id="find"  parameterType="com.infotop.constants.MediaConfig" resultType="com.infotop.constants.MediaConfig"  flushCache="true">
+        select id ,virtual_name as virtualName,ip,sort,port,rows,fg_bite_min as fgBiteMin,
+        fg_bite_mid as fgBiteMid,fg_bite_max as fgBiteMax,fg_bite_Sup as fgBiteSup,fg_vf as fgVf,fg_thread as fgThread,
+        fg_cv as fgCv,fg_ca as fgCa,fg_cv_on as fgCvOn,fg_ca_on as fgCaOn,fg_ts as fgTs
+        ,remote_ip as remoteIp,
+        remote_port as remotePort,remote_info as remoteInfo,remote_status as remoteStatus,fg_bt as fgBt,
+        fg_sleep as fgSleep,fg_bmin_buf as fgBminBuf,fg_bmid_buf as fgBmidBuf,fg_bmax_buf as fgBmaxBuf,
+        fg_bsup_buf as fgBsupBuf,fg_hls_time as fgHlsTime,fg_hls_size as fgHlsSize,
+        codec_on as codecOn,copy_on as copyOn,master as master  from config where 1=1
+        <if test="ip!=null"> and  ip=#{ip} </if>
+        <if test="id!=0"> and  id=#{id} </if>
+        <if test="port!=null"> and port = #{port} </if>
+	  
+    </select>
+    <!-- 查找 -->
+    <select id="findPropertiesByName" parameterType="java.lang.String"  resultType="com.infotop.constants.MediaConfig"  flushCache="true">
+        select id ,virtual_name as virtualName,ip,sort,port,rows,fg_bite_min as fgBiteMin,
+        fg_bite_mid as fgBiteMid,fg_bite_max as fgBiteMax,fg_bite_Sup as fgBiteSup,fg_vf as fgVf,fg_thread as fgThread,
+        fg_cv as fgCv,fg_ca as fgCa,fg_cv_on as fgCvOn,fg_ca_on as fgCaOn,fg_ts as fgTs
+        ,remote_ip as remoteIp, 
+        remote_port as remotePort,remote_info as remoteInfo,remote_status as remoteStatus,fg_bt as fgBt,
+        fg_sleep as fgSleep,fg_bmin_buf as fgBminBuf,fg_bmid_buf as fgBmidBuf,fg_bmax_buf as fgBmaxBuf,
+        fg_bsup_buf as fgBsupBuf,fg_hls_time as fgHlsTime,fg_hls_size as fgHlsSize,
+        codec_on as codecOn,copy_on as copyOn,master as master ,r as r from config where virtual_name=#{virtualName}  
+    </select>
+    <select id="findProperties"   resultType="com.infotop.constants.MediaConfig"  flushCache="true">
+        select id ,virtual_name as virtualName,ip,sort,port,rows,fg_bite_min as fgBiteMin,
+        fg_bite_mid as fgBiteMid,fg_bite_max as fgBiteMax,fg_bite_Sup as fgBiteSup,fg_vf as fgVf,fg_thread as fgThread,
+        fg_cv as fgCv,fg_ca as fgCa,fg_cv_on as fgCvOn,fg_ca_on as fgCaOn,fg_ts as fgTs
+        ,remote_ip as remoteIp,
+        remote_port as remotePort,remote_info as remoteInfo,remote_status as remoteStatus,fg_bt as fgBt,
+        fg_sleep as fgSleep,fg_bmin_buf as fgBminBuf,fg_bmid_buf as fgBmidBuf,fg_bmax_buf as fgBmaxBuf,
+        fg_bsup_buf as fgBsupBuf,fg_hls_time as fgHlsTime,fg_hls_size as fgHlsSize,
+        codec_on as codecOn ,copy_on as copyOn,master as master  from config where 1=1
+        <if test="ip!=null"> and  ip=#{ip} </if>
+		
+        <if test="port!=null"> and port = #{port} </if>
+	  
+    </select>
+    <update id="updateConfig" parameterType="com.infotop.constants.MediaConfig">
+        update config set id=#{id},virtual_name=#{virtualName},ip=#{ip},remote_ip=#{remoteIp},
+        remote_port=#{remotePort},remote_info=#{remoteInfo},remote_status=#{remoteStatus},
+        sort=#{sort},port=#{port},rows=#{rows},fg_bite_min=#{fgBiteMin},
+        fg_bite_mid=#{fgBiteMid},fg_bite_max=#{fgBiteMax},fg_bite_Sup=#{fgBiteSup},fg_vf=#{fgVf},fg_thread=#{fgThread},
+        fg_cv=#{fgCv},fg_ca=#{fgCa},fg_cv_on=#{fgCvOn},fg_ca_on=#{fgCaOn},fg_ts=#{fgTs}
+        ,fg_sleep=#{fgSleep} , fg_bt=#{fgBt} ,fg_bmin_buf=#{fgBminBuf},fg_bmid_buf=#{fgBmidBuf},fg_bmax_buf=#{fgBmaxBuf},
+        fg_bsup_buf=#{fgBsupBuf},fg_hls_time=#{fgHlsTime},fg_hls_size=#{fgHlsSize},codec_on=#{codecOn} 
+        ,copy_on=#{copyOn},master=#{master} where  id = #{id}
+    </update>
+    <update id="updateCodec" parameterType="com.infotop.constants.MediaConfig">
+        update config set codec_on=#{codecOn} where  id = #{id}
+    </update>
+    <delete id="deleteConfig" parameterType="INTEGER">
+        delete from config
+        where id = #{id}
+    </delete>
+    <select id="findConfig" resultType="java.util.Map" parameterType="java.util.Map" flushCache="true" >
+        select id ,virtual_name as virtualName,ip,sort,port,rows,fg_bite_min as fgBiteMin,
+        fg_bite_mid as fgBiteMid,fg_bite_max as fgBiteMax,fg_bite_Sup as fgBiteSup,fg_vf as fgVf,fg_thread as fgThread,
+        fg_cv as fgCv,fg_ca as fgCa,fg_cv_on as fgCvOn,fg_ca_on as fgCaOn,fg_ts as fgTs
+        ,remote_ip as remoteIp, 
+        remote_port as remotePort,remote_info as remoteInfo,remote_status as remoteStatus,fg_bt as fgBt,
+        fg_sleep as fgSleep,fg_bmin_buf as fgBminBuf,fg_bmid_buf as fgBmidBuf,fg_bmax_buf as fgBmaxBuf,
+        fg_bsup_buf as fgBsupBuf,fg_hls_time as fgHlsTime,fg_hls_size as fgHlsSize,codec_on as codecOn 
+         ,copy_on as copyOn,master as master from config where 1=1  
+        <if test="virtualName!=null"> and virtual_name like CONCAT(CONCAT('%', #{virtualName,jdbcType=VARCHAR}),'%') </if>
+        limit #{pageIndex},#{pageSize} 
+    </select> 
+    <select id="findConfigCount" resultType="java.lang.Integer" parameterType="java.util.Map"  flushCache="true">
+        select count(id)  from config  where 1=1  
+        <if test="virtualName!=null"> and virtual_name like CONCAT(CONCAT('%', #{virtualName,jdbcType=VARCHAR}),'%') </if>
+    </select>
+    <select id="findRemote" resultType="com.infotop.entity.Remote"  parameterType="java.lang.String"  flushCache="true">
+        select source as source ,url as url from remote  where 1=1  
+    </select>
+</mapper>

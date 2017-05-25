@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<!-- 引用db.properties配置文件 -->
+	<properties resource="jdbc.properties" >
+	</properties>
+	<settings>
+		<!-- changes from the defaults for testing -->
+		<setting name="cacheEnabled" value="false" />
+		<setting name="useGeneratedKeys" value="true" />
+		<setting name="defaultExecutorType" value="REUSE" />
+		<setting name="logImpl" value="LOG4J" />
+	</settings>
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<!-- 配置数据库连接信息 -->
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+				<!-- 在任意时间存在的活动（也就是正在使用）连接的数量 -->
+				<property name="poolMaximumActiveConnections" value="10" />
+				<!-- 任意时间存在的空闲连接数 -->
+				<property name="poolMaximumIdleConnections" value="5" />
+				<!-- 在被强制返回之前，池中连接被检查的时间 -->
+				<property name="poolMaximumCheckoutTime" value="20000" />
+				<!-- 这是给连接池一个打印日志状态机会的低层次设置，还有重新尝试获得连接，这些情况下往往需要很长时间（为了避免连接池没有配置时静默失败） -->
+				<property name="poolTimeToWait" value="20000" />
+				<property name="poolPingQuery" value="SELECT 1 from dual" />
+				<property name="poolPingEnabled" value="true" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="com/infotop/mapping/MediaMapper.xml" />
+		<mapper resource="com/infotop/mapping/CodecMapper.xml" />
+		<mapper resource="com/infotop/constants/ConstantsMapper.xml" />
+		<mapper resource="com/infotop/mapping/OperateLogMapper.xml" />
+	</mappers>
+
+</configuration>

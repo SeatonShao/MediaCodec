@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper  namespace="com.infotop.mapping.MediaMapper" >
+	<!-- 查找 -->
+	<select id="findMediaById" parameterType="INTEGER"  resultType="com.infotop.entity.Media"  flushCache="true">
+		select id ,title ,name,media_name as mediaName ,target_uuid as targetUuid,media_path as mediaPath,media_length as mediaLength,pic_path as picPath,content_type as contentType
+		,bite_min as biteMin,bite_mid as biteMid,bite_max as biteMax,bite_sup as biteSup,status,create_user as createUser
+		,create_time as createTime  from media_info where id=#{id}
+	</select>
+	<select id="findMedia" parameterType="com.infotop.entity.Media" flushCache="true"
+		resultType="com.infotop.entity.Media" >
+		select id ,title ,name,media_name as mediaName ,target_uuid as targetUuid,media_path as mediaPath,media_length as mediaLength,pic_path as picPath,content_type as contentType
+		,bite_min as biteMin,bite_mid as biteMid,bite_max as biteMax,bite_sup as biteSup,status,create_user as createUser
+		,create_time as createTime from media_info where 1=1		
+		<if test="title != null">
+    		AND title like #{title}
+  </if>
+  <if test="biteMin != null">
+    		AND bite_min = #{biteMin}
+  </if>
+   <if test="createUser != null">
+    		AND create_user like #{createUser}
+  </if>
+	</select>
+	<insert id="addMedia" parameterType="com.infotop.entity.Media" useGeneratedKeys="true"  keyProperty="id"
+		 >
+		insert into
+		media_info(title,name,target_uuid,media_name,media_path,media_length,content_type,pic_path,bite_min,bite_mid,bite_max,bite_sup,status,create_user)
+		values
+		(#{title},#{name},#{targetUuid},#{mediaName},#{mediaPath},#{mediaLength},#{contentType},#{picPath},#{biteMin},#{biteMid},#{biteMax},#{biteSup},#{status},#{createUser})
+	</insert>
+	<insert id="addMediaTemp" parameterType="com.infotop.entity.Media"
+		 >
+		insert into
+		media_info_temp(id,title,name,target_uuid,media_name,media_path,media_length,content_type,pic_path,bite_min,bite_mid,bite_max,bite_sup,status,create_user)
+		values
+		(#{id,jdbcType=BIGINT},#{title},#{name},#{targetUuid},#{mediaName},#{mediaPath},#{mediaLength},#{contentType},#{picPath},#{biteMin},#{biteMid},#{biteMax},#{biteSup},#{status},#{createUser})
+	</insert>
+	<insert id="addMediaErr" parameterType="com.infotop.entity.Media" 
+		 >
+		insert into
+		media_info_err(id,title,name,target_uuid,media_name,media_path,media_length,content_type,pic_path,bite_min,bite_mid,bite_max,bite_sup,status,create_user)
+		values
+		(#{id,jdbcType=BIGINT},#{title},#{name},#{targetUuid},#{mediaName},#{mediaPath},#{mediaLength},#{contentType},#{picPath},#{biteMin},#{biteMid},#{biteMax},#{biteSup},#{status},#{createUser})
+	</insert>
+	<update id="updateMediaById" parameterType="com.infotop.entity.Media">
+		update media_info set title = #{title},target_uuid = #{targetUuid},name = #{name},media_name =
+		#{mediaName},media_path = #{mediaPath},media_length=#{mediaLength},content_type = #{contentType},
+		pic_path = #{picPath},bite_min = #{biteMin},bite_mid = #{biteMid},bite_max =
+		#{biteMax},bite_sup = #{biteSup},status = #{status},create_user=#{createUser},virtual_name=#{virtualName}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateMediaTempById" parameterType="com.infotop.entity.Media">
+		update media_info_temp set title = #{title},target_uuid = #{targetUuid},name = #{name},media_name =
+		#{mediaName},media_path = #{mediaPath},media_length=#{mediaLength},content_type = #{contentType},
+		pic_path = #{picPath},bite_min = #{biteMin},bite_mid = #{biteMid},bite_max =
+		#{biteMax},bite_sup = #{biteSup},status = #{status},create_user=#{createUser}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	
+	<update id="updateMediaStatus" parameterType="com.infotop.entity.Media">
+		update media_info set status = #{status}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<delete id="deleteMediaById"  parameterType="java.lang.Long">
+		delete from media_info where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<delete id="deleteMediaTemp" parameterType="java.lang.Long">
+		delete from media_info_temp where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<delete id="deleteMediaTempById" parameterType="java.lang.Long">
+		delete from media_info_temp where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<delete id="updateMediaWeightById" parameterType="java.lang.Long">
+		update  media_info_temp set weight = weight+1 where id = #{id,jdbcType=BIGINT}
+	</delete>
+</mapper>

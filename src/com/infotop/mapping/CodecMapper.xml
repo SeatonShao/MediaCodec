@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper  namespace="com.infotop.mapping.CodecMapper"  >
+
+	<!-- 查找 -->
+	<select id="findMedia" parameterType="com.infotop.entity.Media"  resultType="com.infotop.entity.Media"  flushCache="true">
+		select id ,title ,name,media_name as mediaName ,target_uuid as targetUuid,media_path as mediaPath,media_length as mediaLength,pic_path as picPath,content_type as contentType
+		,bite_min as biteMin,bite_mid as biteMid,bite_max as biteMax,bite_sup as biteSup,status,create_user as createUser
+		,create_time as createTime  from media_info where 1=1
+	</select>
+	<!-- 查找 -->
+	<select id="findMediaTemp" resultType="com.infotop.entity.Media"  parameterType="INTEGER" flushCache="true">
+		select id ,title ,name,media_name as mediaName ,target_uuid as targetUuid,media_path as mediaPath,media_length as mediaLength,pic_path as picPath,content_type as contentType
+		,bite_min as biteMin,bite_mid as biteMid,bite_max as biteMax,bite_sup as biteSup,status,create_user as createUser
+		,create_time as createTime  from media_info_temp where status=1 order by weight desc ,id asc
+		limit  #{0,jdbcType=INTEGER},1 
+	</select>
+	<!-- 查找 -->
+	<select id="findOneTemp" resultType="com.infotop.entity.Media" parameterType="INTEGER" flushCache="true">
+		select id ,title ,name,media_name as mediaName ,target_uuid as targetUuid,media_path as mediaPath,media_length as mediaLength,pic_path as picPath,content_type as contentType
+		,bite_min as biteMin,bite_mid as biteMid,bite_max as biteMax,bite_sup as biteSup,status,create_user as createUser,virtual_name as virtualName 
+		 from media_info_temp where id=#{0,jdbcType=INTEGER}
+	</select>
+	<select id="findMediaCodec" resultType="java.util.Map" parameterType="java.util.Map" flushCache="true" >
+		select id ,title ,name,media_name as mediaName ,target_uuid as targetUuid,media_path as mediaPath,media_length as mediaLength,pic_path as picPath,content_type as contentType
+		,bite_min as biteMin,bite_mid as biteMid,bite_max as biteMax,bite_sup as biteSup,status,create_user as createUser
+		,create_time as createTime ,weight as weight, ip as ip,virtual_name as virtualName  from media_info_temp where 1=1  
+		<if test="mediaName!=null"> and  name like CONCAT(CONCAT('%', #{mediaName,jdbcType=VARCHAR}),'%') </if>
+		<if test="sort=='desc'"> order by status desc,id desc </if> 
+		<if test="sort=='asc'"> order by status desc,id asc </if> 
+	    limit #{pageIndex},#{pageSize} 
+	</select>
+	<update id="updateMediaTemp"  flushCache="true">
+		update media_info_temp set status ='2',virtual_name = #{virtualName}
+		where id = (select t.id from (Select m.id as id from media_info_temp as m where status =1  
+		<if test="sort=='asc'"> order by  weight desc,id asc </if>
+		<if test="sort=='desc'"> order by  weight desc,id desc </if> limit #{remainder},1) as t) 
+	</update>
+	<!-- 查找 -->
+	<select id="findTempCodec" resultType="com.infotop.entity.Media" parameterType="java.lang.String"  flushCache="true">
+		select id ,title ,name,media_name as mediaName ,target_uuid as targetUuid,media_path as mediaPath,media_length as mediaLength,pic_path as picPath,content_type as contentType
+		,bite_min as biteMin,bite_mid as biteMid,bite_max as biteMax,bite_sup as biteSup,status,create_user as createUser,virtual_name as virtualName 
+		 from media_info_temp where status='2' and virtual_name=#{virtualName} limit 0,1
+	</select>
+	<select id="findMediaCodecCount" resultType="INTEGER" parameterType="java.util.Map"  flushCache="true">
+		select count(id)  from media_info_temp where 1=1  
+		<if test="mediaName!=null"> and  name like CONCAT(CONCAT('%', #{mediaName,jdbcType=VARCHAR}),'%') </if>
+	</select>
+	<select id="findPlayList" resultType="java.util.Map" parameterType="java.util.Map" flushCache="true" >
+		select id ,title ,name,media_name as mediaName ,target_uuid as targetUuid,media_path as mediaPath,media_length as mediaLength,pic_path as picPath,content_type as contentType
+		,bite_min as biteMin,bite_mid as biteMid,bite_max as biteMax,bite_sup as biteSup,status,create_user as createUser
+		,create_time as createTime  from media_info where 1=1  
+		<if test="mediaName!=null"> and name like CONCAT(CONCAT('%', #{mediaName,jdbcType=VARCHAR}),'%') </if>
+		<if test="sort=='desc'"> order by status desc,id desc </if> 
+		<if test="sort=='asc'"> order by status desc,id asc </if> 
+	    limit #{pageIndex},#{pageSize} 
+	</select>
+		<select id="findPlayListCount" resultType="java.lang.Integer" parameterType="java.util.Map"  flushCache="true">
+		select count(id)  from media_info  where 1=1  
+		<if test="mediaName!=null"> and  name like CONCAT(CONCAT('%', #{mediaName,jdbcType=VARCHAR}),'%') </if>
+	    
+		
+	</select>
+</mapper>

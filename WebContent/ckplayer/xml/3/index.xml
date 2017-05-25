@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ckplayer>
+	<flashvars>{h->3}{defa->3|1|2}{deft->超清|标清|高清}3/index.xml</flashvars>
+	<video>
+		<file><![CDATA[<%=basePath %>'+'/HLS?abc='+'<%=timestamp%>%26fpath='+'<%=path%>]]></file>
+	</video>
+</ckplayer>

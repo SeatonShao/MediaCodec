@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <!--
+        Configuration后面的status，这个用于设置log4j2自身内部的信息输出，可以不设置，当设置成trace时，你会看到log4j2内部各种详细输出。 
+    -->
+    <!--
+        monitorInterval：Log4j能够自动检测修改配置 文件和重新配置本身，设置间隔秒数。
+    -->
+    <configuration status="error" monitorInterval="300">
+        <!--先定义所有的appender-->
+        <appenders>
+            <!--这个输出控制台的配置-->
+            <Console name="Console" target="SYSTEM_OUT">
+                <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+                <!--这个都知道是输出日志的格式-->
+                <PatternLayout pattern="%d{yyyy-MM-dd 'at' HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
+            </Console>
+            <!--文件会打印出所有信息，这个log每次运行程序会自动清空，由append属性决定，这个也挺有用的，适合临时测试用 append="false"-->
+            <File name="log" fileName="${sys:user.dir}/logs/test.log" >
+                <PatternLayout pattern="%d{yyyy-MM-dd 'at' HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
+            </File> 
+            <!-- 这个会打印出所有的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档
+            下面配置一个按时间和文件大小滚动的RollingRandomAccessFile Appender，名字真是够长，但不光只是名字长，
+            相比RollingFileAppender有很大的性能提升，官网宣称是20-200%。Rolling的意思是当满足一定条件后，就重命名原日志文件用于备份，并从新生成一个新的日志文件。
+            例如需求是每天生成一个日志文件，但是如果一天内的日志文件体积已经超过1G，就从新生成，两个条件满足一个即可-->
+            <RollingRandomAccessFile  name="RollingFile" fileName="${sys:user.dir}/logs/app.log"
+                     filePattern="${sys:user.dir}/logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
+                     <!-- 
+                     RollingRandomAccessFile的属性：
+                     fileName  指定当前日志文件的位置和文件名称
+                     filePattern  指定当发生Rolling时，文件的转移和重命名规则
+                     TimeBasedTriggeringPolicy  这个配置需要和filePattern结合使用，注意filePattern中配置的文件重命名规则是
+                     ${FILE_NAME}-%d{yyyy-MM-dd HH-mm}-%i，最小的时间粒度是mm，即分钟，TimeBasedTriggeringPolicy指定的size是1，结合起来就是每1分钟生成一个新文件。
+                     如果改成%d{yyyy-MM-dd HH}，最小粒度为小时，则每一个小时生成一个文件。 -->
+                <PatternLayout  pattern="%d{yyyy-MM-dd 'at' HH:mm:ss z} %-5level %class{36} %L %M - %msg%xEx%n"/>
+                 <Policies> 
+                 <TimeBasedTriggeringPolicy interval="1" />  
+                 <!-- SizeBasedTriggeringPolicy  指定当文件体积大于size指定的值时，触发Rolling -->
+                 <SizeBasedTriggeringPolicy size="1MB"/>
+                 </Policies>
+                <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20
+                DefaultRolloverStrategy  指定最多保存的文件个数 -->
+                <DefaultRolloverStrategy max="20"/>
+            </RollingRandomAccessFile >
+        </appenders>
+        <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
+        <loggers>
+            <!--建立一个默认的root的logger  additivity="false"表示在该logger中输出的日志不会再延伸到父层logger。
+            这里如果改为true，则会延伸到Root Logger，遵循Root Logger的配置也输出一次。
+             <Logger name="mylog" level="trace" additivity="true">  
+            <AppenderRef ref="MyFile" />  
+        </Logger> -->
+            <root level="info">
+                <appender-ref ref="RollingFile"/>
+                <appender-ref ref="Console"/>
+            </root> 
+        </loggers>
+    </configuration>
+    <!-- 自定义配置文件位置
+     <context-param>  
+    <param-name>log4jConfiguration</param-name>  
+    <param-value>/WEB-INF/conf/log4j2.xml</param-value>  
+</context-param>  
+  
+<listener>  
+    <listener-class>org.apache.logging.log4j.web.Log4jServletContextListener</listener-class>  
+</listener>  
+1. 按日志级别区分文件输出
+<Configuration status="WARN" monitorInterval="300">  
+    <properties>  
+        <property name="LOG_HOME">D:/logs</property>  
+    </properties>  
+    <Appenders>  
+        <Console name="Console" target="SYSTEM_OUT">  
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />  
+        </Console>  
+  
+        <RollingRandomAccessFile name="InfoFile"  
+            fileName="${LOG_HOME}/info.log"  
+            filePattern="${LOG_HOME}/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log">  
+            <Filters>  
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL" />  
+                <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY" />  
+            </Filters>  
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />  
+            <Policies>  
+                <TimeBasedTriggeringPolicy />  
+                <SizeBasedTriggeringPolicy size="10 MB" />  
+            </Policies>  
+            <DefaultRolloverStrategy max="20" />  
+        </RollingRandomAccessFile>  
+          
+        <RollingRandomAccessFile name="ErrorFile"  
+            fileName="${LOG_HOME}/error.log"  
+            filePattern="${LOG_HOME}/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log">  
+            <Filters>  
+                <ThresholdFilter level="fatal" onMatch="DENY" onMismatch="NEUTRAL" />  
+                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY" />  
+            </Filters>  
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />  
+            <Policies>  
+                <TimeBasedTriggeringPolicy />  
+                <SizeBasedTriggeringPolicy size="10 MB" />  
+            </Policies>  
+            <DefaultRolloverStrategy max="20" />  
+        </RollingRandomAccessFile>  
+          
+        <RollingRandomAccessFile name="FatalFile"  
+            fileName="${LOG_HOME}/fatal.log"  
+            filePattern="${LOG_HOME}/$${date:yyyy-MM}/fatal-%d{yyyy-MM-dd}-%i.log">  
+            <Filters>  
+                <ThresholdFilter level="fatal" onMatch="ACCEPT" onMismatch="DENY" />  
+            </Filters>  
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />  
+            <Policies>  
+                <TimeBasedTriggeringPolicy />  
+                <SizeBasedTriggeringPolicy size="10 MB" />  
+            </Policies>  
+            <DefaultRolloverStrategy max="20" />  
+        </RollingRandomAccessFile>  
+    </Appenders>  
+  
+    <Loggers>  
+        <Root level="trace">  
+            <AppenderRef ref="Console" />  
+            <AppenderRef ref="InfoFile" />  
+            <AppenderRef ref="ErrorFile" />  
+            <AppenderRef ref="FatalFile" />  
+        </Root>  
+    </Loggers>  
+</Configuration> 
+2 异步写日志
+<Configuration status="WARN" monitorInterval="300">  
+    <properties>  
+        <property name="LOG_HOME">D:/logs</property>  
+        <property name="FILE_NAME">mylog</property>  
+    </properties>  
+  
+    <Appenders>  
+        <Console name="Console" target="SYSTEM_OUT">  
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />  
+        </Console>  
+        <RollingRandomAccessFile name="MyFile"  
+            fileName="${LOG_HOME}/${FILE_NAME}.log"  
+            filePattern="${LOG_HOME}/$${date:yyyy-MM}/${FILE_NAME}-%d{yyyy-MM-dd HH-mm}-%i.log">  
+            <PatternLayout  
+                pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />  
+            <Policies>  
+                <TimeBasedTriggeringPolicy interval="1" />  
+                <SizeBasedTriggeringPolicy size="10 MB" />  
+            </Policies>  
+            <DefaultRolloverStrategy max="20" />  
+        </RollingRandomAccessFile>  
+        <Async name="Async">  
+            <AppenderRef ref="MyFile" />  
+        </Async>  
+    </Appenders>  
+  
+    <Loggers>  
+        <Logger name="asynclog" level="trace" additivity="false" >  
+            <AppenderRef ref="Async" />  
+        </Logger>  
+        <Root level="error">  
+            <AppenderRef ref="Console" />  
+        </Root>  
+    </Loggers>  
+</Configuration> 
+3 输出到MongoDB
+<dependency>  
+    <groupId>org.apache.logging.log4j</groupId>  
+    <artifactId>log4j-nosql</artifactId>  
+    <version>2.5</version>  
+</dependency>  
+<dependency>  
+    <groupId>org.mongodb</groupId>  
+    <artifactId>mongo-java-driver</artifactId>  
+    <version>3.2.2</version>  
+</dependency>  
+<Configuration status="WARN" monitorInterval="300">  
+    <Appenders>  
+        <Console name="Console" target="SYSTEM_OUT">  
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />  
+        </Console>  
+  
+        <NoSql name="databaseAppender">  
+            <MongoDb databaseName="test" collectionName="errorlog"  
+                server="localhost" port="27017" />  
+        </NoSql>  
+    </Appenders>  
+  
+    <Loggers>  
+        <Logger name="mongolog" level="trace" additivity="false">  
+            <AppenderRef ref="databaseAppender" />  
+        </Logger>  
+        <Root level="error">  
+            <AppenderRef ref="Console" />  
+        </Root>  
+    </Loggers>  
+</Configuration> 
+4 输出到Flume
+
+Flume配置(flume-conf.properties)
+agent1.sources=source1   
+agent1.sinks=sink1   
+agent1.channels=channel1   
+  
+agent1.sources.source1.type=avro  
+agent1.sources.source1.channels=channel1  
+agent1.sources.source1.bind=0.0.0.0  
+agent1.sources.source1.port=41414  
+  
+agent1.sinks.sink1.type=file_roll   
+agent1.sinks.sink1.sink.directory=D:/log  
+agent1.sinks.sink1.channel=channel1  
+agent1.sinks.sink1.sink.rollInterval=86400  
+agent1.sinks.sink1.sink.batchSize=100  
+agent1.sinks.sink1.sink.serializer=text  
+agent1.sinks.sink1.sink.serializer.appendNewline = false  
+  
+agent1.channels.channel1.type=file   
+agent1.channels.channel1.checkpointDir=D:/log/checkpoint   
+agent1.channels.channel1.dataDirs=D:/log/data  
+启动Flume（注：测试环境为windows）
+flume-ng.cmd agent -  --><!-- -conf ../conf/ - --><!-- -conf-file ../conf/flume-conf.properties -name agent1  
+添加依赖
+<dependency>  
+    <groupId>org.apache.logging.log4j</groupId>  
+    <artifactId>log4j-flume-ng</artifactId>  
+    <version>2.5</version>  
+</dependency>  
+配置文件：
+<Configuration status="WARN" monitorInterval="300">  
+    <Appenders>  
+        <Flume name="eventLogger" compress="false">  
+            <Agent host="127.0.0.1" port="41414" />  
+            <RFC5424Layout enterpriseNumber="18060" includeMDC="true" appName="MyApp" />  
+        </Flume>  
+    </Appenders>  
+    <Loggers>  
+        <Root level="trace">  
+            <AppenderRef ref="eventLogger" />  
+        </Root>  
+    </Loggers>  
+</Configuration> 
+-->
+    
