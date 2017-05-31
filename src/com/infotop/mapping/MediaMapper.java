@@ -22,4 +22,7 @@ public interface MediaMapper {
 	public boolean deleteMediaById(long id);
 	public boolean deleteMediaTempById(long id);
 	public boolean updateMediaWeightById(long id);
+	public void addMediaById(long id);
+	public Media findErrMediaById(Media media);
+	public void deleteErrMediaById(long id);
 }

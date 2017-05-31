@@ -8,6 +8,11 @@
 		,bite_min as biteMin,bite_mid as biteMid,bite_max as biteMax,bite_sup as biteSup,status,create_user as createUser
 		,create_time as createTime  from media_info where id=#{id}
 	</select>
+	<select id="findErrMediaById" parameterType="INTEGER"  resultType="com.infotop.entity.Media"  flushCache="true">
+		select id ,title ,name,media_name as mediaName ,target_uuid as targetUuid,media_path as mediaPath,media_length as mediaLength,pic_path as picPath,content_type as contentType
+		,bite_min as biteMin,bite_mid as biteMid,bite_max as biteMax,bite_sup as biteSup,status,create_user as createUser
+		,create_time as createTime  from media_info_err where id=#{id}
+	</select>
 	<select id="findMedia" parameterType="com.infotop.entity.Media" flushCache="true"
 		resultType="com.infotop.entity.Media" >
 		select id ,title ,name,media_name as mediaName ,target_uuid as targetUuid,media_path as mediaPath,media_length as mediaLength,pic_path as picPath,content_type as contentType
@@ -30,8 +35,7 @@
 		values
 		(#{title},#{name},#{targetUuid},#{mediaName},#{mediaPath},#{mediaLength},#{contentType},#{picPath},#{biteMin},#{biteMid},#{biteMax},#{biteSup},#{status},#{createUser})
 	</insert>
-	<insert id="addMediaTemp" parameterType="com.infotop.entity.Media"
-		 >
+	<insert id="addMediaTemp" parameterType="com.infotop.entity.Media">
 		insert into
 		media_info_temp(id,title,name,target_uuid,media_name,media_path,media_length,content_type,pic_path,bite_min,bite_mid,bite_max,bite_sup,status,create_user)
 		values
@@ -43,6 +47,14 @@
 		media_info_err(id,title,name,target_uuid,media_name,media_path,media_length,content_type,pic_path,bite_min,bite_mid,bite_max,bite_sup,status,create_user)
 		values
 		(#{id,jdbcType=BIGINT},#{title},#{name},#{targetUuid},#{mediaName},#{mediaPath},#{mediaLength},#{contentType},#{picPath},#{biteMin},#{biteMid},#{biteMax},#{biteSup},#{status},#{createUser})
+	</insert>
+	<insert id="addMediaById" parameterType="java.lang.Long"
+		 >
+		insert into
+		media_info_temp(id,title,name,target_uuid,media_name,media_path,media_length,content_type,pic_path,bite_min,bite_mid,bite_max,bite_sup,status,create_user)
+		select  
+		 id,title,name,target_uuid,media_name,media_path,media_length,content_type,pic_path,bite_min,bite_mid,bite_max,bite_sup,'1',create_user
+		 from media_info_err where id =#{id,jdbcType=BIGINT}
 	</insert>
 	<update id="updateMediaById" parameterType="com.infotop.entity.Media">
 		update media_info set title = #{title},target_uuid = #{targetUuid},name = #{name},media_name =
@@ -65,6 +77,9 @@
 	</update>
 	<delete id="deleteMediaById"  parameterType="java.lang.Long">
 		delete from media_info where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<delete id="deleteErrMediaById"  parameterType="java.lang.Long">
+		delete from media_info_err where id = #{id,jdbcType=BIGINT}
 	</delete>
 	<delete id="deleteMediaTemp" parameterType="java.lang.Long">
 		delete from media_info_temp where id = #{id,jdbcType=BIGINT}

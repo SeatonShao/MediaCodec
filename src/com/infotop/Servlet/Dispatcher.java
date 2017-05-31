@@ -70,6 +70,8 @@ public class Dispatcher extends HttpServlet {
 			request.getRequestDispatcher("/WEB-INF/view/configForm.jsp").forward(request, response);
 		} else if ("PlayList".equals(page)) {
 			request.getRequestDispatcher("/WEB-INF/view/playList.jsp").forward(request, response);
+		} else if ("error".equals(page)) {
+			request.getRequestDispatcher("/WEB-INF/view/errList.jsp").forward(request, response);
 		} else if (path != null && !"".equals(path)) {
 			MediaDao mediaDao = DaoFactory.getMediaDao();
 			Media media = new Media();

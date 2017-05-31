@@ -31,5 +31,10 @@ public class MybatisDao<E>   {
 		log.info("session 开启");
 		return sessionFactory.openSession(true);
 	}
+	public SqlSession getSession(boolean b) {
+		log.info("session 开启");
+		return sessionFactory.openSession(b);
+	}
+	
 	
 }

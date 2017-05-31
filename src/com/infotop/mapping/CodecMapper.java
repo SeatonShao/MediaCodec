@@ -21,4 +21,6 @@ public interface CodecMapper  {
 	public Media findTempCodec(String ip);
 	public Integer findPlayListCount(Map params);
 	public List findPlayList(Map params);
+	public List findErrList(Map params);
+	public Integer findErrListCount(Map params);
 }

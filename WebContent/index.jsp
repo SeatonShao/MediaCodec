@@ -27,6 +27,7 @@
 <%-- 			<td><a href="<%=basePath%>/Dispatcher?page=video2">video2视频列表</a></td> --%>
 			<td><a href="<%=basePath%>/Dispatcher?page=codec">编码列表</a></td>
 			<td><a href="<%=basePath%>/Dispatcher?page=PlayList">视频列表</a></td>
+			<td><a href="<%=basePath%>/Dispatcher?page=error">error列表</a></td>
 			<td><a href="<%=basePath%>/Dispatcher?page=config">配置列表</a></td>
 		<%-- 	<td><a href="<%=basePath%>/Dispatcher?page=log">日志列表</a></td>
 		 --%></tr>

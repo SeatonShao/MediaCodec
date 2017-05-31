@@ -70,7 +70,20 @@ public class MediaService {
 			session.close();
 		}
 	}
-
+	
+	public List getErrList(Map  params) {
+		SqlSession session = new MybatisDao<Object>().getSession();
+		CodecMapper userMapper = session.getMapper(CodecMapper.class);
+		try {
+			return userMapper.findErrList(params);
+		} catch (Exception e) {
+			log.error("media find",e);
+			return null;
+		} finally{
+			log.info("session 关闭");
+			session.close();
+		}
+	}
 	public Integer getPlayListCount(Map  params) {
 		SqlSession session = new MybatisDao<Object>().getSession();
 		CodecMapper userMapper = session.getMapper(CodecMapper.class);
@@ -94,6 +107,20 @@ public class MediaService {
 			return false;
 		} finally{
 			log.info("升级转码id="+id+"视频优先级");
+			log.info("session 关闭");
+			session.close();
+		}
+	}
+
+	public Integer getErrListCount(Map params) {
+		SqlSession session = new MybatisDao<Object>().getSession();
+		CodecMapper userMapper = session.getMapper(CodecMapper.class);
+		try {
+			return userMapper.findErrListCount( params);
+		} catch (Exception e) {
+			log.error("media find",e);
+			return 0;
+		} finally{
 			log.info("session 关闭");
 			session.close();
 		}

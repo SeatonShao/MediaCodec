@@ -58,6 +58,19 @@ public class MediaDaoImpl extends MybatisDao<Object> implements MediaDao {
 			session.close();
 		}
 	}
+	public Media findErr(Media media) {
+		SqlSession session = getSession();
+		MediaMapper userMapper = session.getMapper(MediaMapper.class);
+		try {
+			return userMapper.findErrMediaById(media);
+		} catch (Exception e) {
+			log.error("media find");
+			return null;
+		}finally {
+			log.info("session 关闭");
+			session.close();
+		}
+	}
 	
 	public boolean save(Media media) {
 		SqlSession session = getSession();

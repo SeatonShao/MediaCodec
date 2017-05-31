@@ -39,4 +39,5 @@ public interface MediaDao  {
 	public boolean deleteMediaTemp(int id);
 	public void saveErr(Media media);
 	public void saveTmp(Media media);
+	public Media findErr(Media media);
 }

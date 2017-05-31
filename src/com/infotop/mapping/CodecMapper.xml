@@ -56,10 +56,23 @@
 		<if test="sort=='asc'"> order by status desc,id asc </if> 
 	    limit #{pageIndex},#{pageSize} 
 	</select>
+	<select id="findErrList" resultType="java.util.Map" parameterType="java.util.Map" flushCache="true" >
+		select id ,title ,name,media_name as mediaName ,target_uuid as targetUuid,media_path as mediaPath,media_length as mediaLength,pic_path as picPath,content_type as contentType
+		,bite_min as biteMin,bite_mid as biteMid,bite_max as biteMax,bite_sup as biteSup,status,create_user as createUser
+		,create_time as createTime  from media_info_err where 1=1  
+		<if test="mediaName!=null"> and name like CONCAT(CONCAT('%', #{mediaName,jdbcType=VARCHAR}),'%') </if>
+		<if test="sort=='desc'"> order by status desc,id desc </if> 
+		<if test="sort=='asc'"> order by status desc,id asc </if> 
+	    limit #{pageIndex},#{pageSize} 
+	</select>
 		<select id="findPlayListCount" resultType="java.lang.Integer" parameterType="java.util.Map"  flushCache="true">
 		select count(id)  from media_info  where 1=1  
 		<if test="mediaName!=null"> and  name like CONCAT(CONCAT('%', #{mediaName,jdbcType=VARCHAR}),'%') </if>
 	    
 		
+	</select>
+	<select id="findErrListCount" resultType="java.lang.Integer" parameterType="java.util.Map"  flushCache="true">
+		select count(id)  from media_info_err  where 1=1  
+		<if test="mediaName!=null"> and  name like CONCAT(CONCAT('%', #{mediaName,jdbcType=VARCHAR}),'%') </if>
 	</select>
 </mapper>
