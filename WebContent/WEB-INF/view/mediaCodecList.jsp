@@ -1,9 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/taglibs.jsp"%>
-<%
-	request.setCharacterEncoding("utf-8");
-%>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -98,15 +95,15 @@
 			var str = '';
 			str += formatString(
 					'<a onclick="deleteOne(\'{0}\',\'{1}\',\'codec_dg\');">删除</a>',
-					row.id, '${ctx}/MediaCodecList');
+					row.id, '${ctx}/c');
 			str += '&nbsp;';
 			str += '&nbsp;';
 			str += '&nbsp;';
+			
 			str += formatString(
-					'<a onclick="update(\'{0}\',\'{1}\',\'codec_dg\',{method:"weightUp",id:'
-							+ row.id + '});">提高优先级</a>',
+					'<a onclick="update(\'{0}\',\'{1}\',\'codec_dg\',{method:\'weightUp\',id:\''
+							+ row.id + '\'});">提高优先级</a>',
 					'${ctx}/MediaCodecList', 'one');
-			str += '&nbsp;';
 			return str;
 		}
 

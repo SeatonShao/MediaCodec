@@ -137,19 +137,40 @@ input{width:100px }
 			editor : 'numberbox',
 			align : 'center'
 		}, {
+			field : 'master',
+			title : '转码host',
+			width : 100,
+			editor : 'textbox',
+			align : 'center'
+		}, {
+			field : 'rr',
+			title : '帧频',
+			width : 100,
+			editor : 'numberbox',
+			align : 'center',
+			 formatter:function(value, row, index){
+				 return row.r;
+			 }
+		},/*  {
 			field : 'codec_on',
 			title : '转码',
 			width : 100,
 			editor : 'textbox',
 			align : 'center',
-                        formatter:function(value, row, index){
-                            if(value=='1'){
-                                return '已开启<input type="button" onclick="codec(\''+row.id+'\',\'0\');" value="点击关闭"/>';
-                            }else{
-                                return '已关闭<input type="button" onclick="codec(\''+row.id+'\',\'0\');" value="点击开启"/>';
-                            }
-                        }
-		}, {
+            formatter:function(value, row, index){
+            	var str = '';
+                      $.post("http://"+row.ip + ':' + row.port+"${ctx}/Codec",{'on':'check'},function(data){
+                    	   if(data){
+                               str +='<a onclick="codec('+row +',\'0\');" >点击关闭</a>';
+                           }else{
+                        	   str += '<a onclick="codec('+row +',\'1\');" >点击开启</a>';
+                           }
+                  
+                      },'json');
+                 	   console.info(str);
+                      return str;
+               }
+		}, */ {
 			field : 'action',
 			title : '操作',
 			width : 160,
@@ -223,10 +244,13 @@ input{width:100px }
 			var rows = $('#config_dg').datagrid('getChanges');
 			alert(rows.length + ' rows are changed!');
 		}
-                function codec(value, on){
-                   
-                    $.post('${ctx}/ConfigList',{method:'codec',id:on},function(data){
-                        
+        function codec(row, on){
+                    $.post("http://"+row.ip + ':' + row.port+'${ctx}/Codec',{'on':on},function(data){
+                        if(data){
+                        	$.messager.alert('ok', "操作成功", 'success');
+                        }else{
+                        	$.messager.alert('错误',"操作失败", 'error');
+                        }
                         
                     },'json');
                         

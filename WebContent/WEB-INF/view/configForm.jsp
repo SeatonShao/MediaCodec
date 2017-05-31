@@ -174,6 +174,14 @@ $(function() {
 			<td><input type="text" name="fgBaseUrl" id="fgBaseUrl"
 				class="easyui-validatebox"
 				data-options="required:true,missingMessage:'不能为空.'" /></td>
+				<td class="biao_bt3">master</td>
+			<td><input type="text" name="master" id="master"
+				class="easyui-validatebox"
+				data-options="required:true,missingMessage:'不能为空.'" /></td>
+				<td class="biao_bt3">帧频</td>
+			<td><input type="text" name="r" id="r"
+				class="easyui-validatebox"
+				data-options="required:true,missingMessage:'不能为空.'" /></td>
 		</tr>
 		<tr>
 		<td align="right" colspan="4"><input type="submit" name="config_sub" id="config_sub" value="确定"/></td>

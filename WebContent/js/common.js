@@ -647,6 +647,7 @@ function treegridDeleteOne(id, deleteUrl, listDatagrid) {
  * @param params
  */
 function update(url,type,listDatagrid,params) {
+	console.info(url);
 	switch (type) {
 	case 'one'://单条上报
 		parent.$.messager.confirm('确认', '是否确定修改?', function(r) {

@@ -24,6 +24,7 @@ import com.infotop.constants.Constants;
 import com.infotop.thrift.resources.common.MediaService;
 import com.infotop.util.ThriftConfig;
 import com.infotop.thrift.MediaHandler;
+import com.google.gson.JsonObject;
 import com.infotop.Servlet.async.MediaCodec;
 
 /**
@@ -89,13 +90,23 @@ public class Codec extends HttpServlet {
 			} else {
 				codecThread.notify();
 			}
-		} else {
+			resp.getOutputStream().print(true);
+		} else if("0".equals(on)) {
 			try {
 				codecThread.wait();
+				resp.getOutputStream().print(true);
 			} catch (InterruptedException e) {
 				log.error("转码线程等待出错！", Codec.class, e);
+				resp.getOutputStream().print(false);
+			}
+		}else if("check".equals(on)) {
+			if(codecThread!=null&&codecThread.getState().equals(Thread.State.RUNNABLE)){
+				resp.getOutputStream().print(true);
+			}else{
+				resp.getOutputStream().print(false);
 			}
 		}
+		resp.getOutputStream().close();
 	}
 
 	@Override

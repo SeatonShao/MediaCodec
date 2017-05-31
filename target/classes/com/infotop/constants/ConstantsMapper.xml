@@ -10,7 +10,7 @@
         remote_port as remotePort,remote_info as remoteInfo,remote_status as remoteStatus,fg_bt as fgBt,
         fg_sleep as fgSleep,fg_bmin_buf as fgBminBuf,fg_bmid_buf as fgBmidBuf,fg_bmax_buf as fgBmaxBuf,
         fg_bsup_buf as fgBsupBuf,fg_hls_time as fgHlsTime,fg_hls_size as fgHlsSize,
-        codec_on as codecOn,copy_on as copyOn,master as master  from config where 1=1
+        codec_on as codecOn,copy_on as copyOn,master as master,r as r  from config where 1=1
         <if test="ip!=null"> and  ip=#{ip} </if>
         <if test="id!=0"> and  id=#{id} </if>
         <if test="port!=null"> and port = #{port} </if>
@@ -35,7 +35,7 @@
         remote_port as remotePort,remote_info as remoteInfo,remote_status as remoteStatus,fg_bt as fgBt,
         fg_sleep as fgSleep,fg_bmin_buf as fgBminBuf,fg_bmid_buf as fgBmidBuf,fg_bmax_buf as fgBmaxBuf,
         fg_bsup_buf as fgBsupBuf,fg_hls_time as fgHlsTime,fg_hls_size as fgHlsSize,
-        codec_on as codecOn ,copy_on as copyOn,master as master  from config where 1=1
+        codec_on as codecOn ,copy_on as copyOn,master as master,r as r  from config where 1=1
         <if test="ip!=null"> and  ip=#{ip} </if>
 		
         <if test="port!=null"> and port = #{port} </if>
@@ -49,7 +49,7 @@
         fg_cv=#{fgCv},fg_ca=#{fgCa},fg_cv_on=#{fgCvOn},fg_ca_on=#{fgCaOn},fg_ts=#{fgTs}
         ,fg_sleep=#{fgSleep} , fg_bt=#{fgBt} ,fg_bmin_buf=#{fgBminBuf},fg_bmid_buf=#{fgBmidBuf},fg_bmax_buf=#{fgBmaxBuf},
         fg_bsup_buf=#{fgBsupBuf},fg_hls_time=#{fgHlsTime},fg_hls_size=#{fgHlsSize},codec_on=#{codecOn} 
-        ,copy_on=#{copyOn},master=#{master} where  id = #{id}
+        ,copy_on=#{copyOn},master=#{master},r=#{r} where  id = #{id}
     </update>
     <update id="updateCodec" parameterType="com.infotop.constants.MediaConfig">
         update config set codec_on=#{codecOn} where  id = #{id}
@@ -66,7 +66,7 @@
         remote_port as remotePort,remote_info as remoteInfo,remote_status as remoteStatus,fg_bt as fgBt,
         fg_sleep as fgSleep,fg_bmin_buf as fgBminBuf,fg_bmid_buf as fgBmidBuf,fg_bmax_buf as fgBmaxBuf,
         fg_bsup_buf as fgBsupBuf,fg_hls_time as fgHlsTime,fg_hls_size as fgHlsSize,codec_on as codecOn 
-         ,copy_on as copyOn,master as master from config where 1=1  
+         ,copy_on as copyOn,master as master,r as r from config where 1=1  
         <if test="virtualName!=null"> and virtual_name like CONCAT(CONCAT('%', #{virtualName,jdbcType=VARCHAR}),'%') </if>
         limit #{pageIndex},#{pageSize} 
     </select> 

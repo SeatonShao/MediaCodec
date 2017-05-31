@@ -102,6 +102,8 @@ public class ConfigList extends HttpServlet {
 			conf.put("remotePort", request.getParameter("remotePort"));
 			conf.put("remoteStatus", request.getParameter("remoteStatus"));
 			conf.put("remoteInfo", request.getParameter("remoteInfo"));
+			conf.put("master", request.getParameter("master"));
+			conf.put("r", request.getParameter("r"));
 			Map result = new HashMap();
 			MediaConfig config = om.convertValue(conf, MediaConfig.class);
 			boolean bool = configListService.updateConfig(config);
